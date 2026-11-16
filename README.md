@@ -24,7 +24,7 @@ Aplicación web de porra electoral para las elecciones generales del 29 de novie
    - **Ránking del Senado** (`ASC`).
 
 5. **Resultados en Tiempo Real y Reglas Temporales**:
-   - Sincronización periódica con `https://datos.generales29n.com` mediante el hook `useLiveResults`.
+   - Sincronización periódica con `https://generales29n.com/datos` (API JSON en `https://datos.generales29n.com`) mediante el hook `useLiveResults`.
    - Cierre automático de modificaciones el **domingo 29 de noviembre de 2026 a las 09:00h (hora peninsular española: `2026-11-29 09:00:00+01`)**, bloqueando escrituras tanto en la interfaz como en Supabase mediante políticas RLS.
 
 ## Configuración de Base de Datos (Supabase)

@@ -424,7 +424,7 @@ export const App: React.FC = () => {
           </div>
         </div>
 
-        {/* Barra de Estado de Escrutinio en Tiempo Real (datos.generales29n.com) */}
+        {/* Barra de Estado de Escrutinio en Tiempo Real (generales29n.com/datos) */}
         <div className="bg-slate-900 text-white px-4 sm:px-6 py-2 text-xs">
           <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2 flex-wrap">
@@ -441,7 +441,7 @@ export const App: React.FC = () => {
                     rel="noreferrer"
                     className="underline text-sky-300 hover:text-white"
                   >
-                    datos.generales29n.com
+                    generales29n.com/datos
                   </a>
                 </span>
               ) : (
@@ -657,7 +657,7 @@ export const App: React.FC = () => {
               rel="noreferrer"
               className="text-blue-600 hover:underline font-medium"
             >
-              datos.generales29n.com
+              generales29n.com/datos
             </a>
           </div>
         </div>

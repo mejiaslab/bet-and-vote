@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Search, X } from 'lucide-react';
 import {
   CONGRESS_PARTIES,
+  getProvincePartyLabel,
   PROVINCES,
   SENATE_PARTIES,
 } from '../constants/elections';
@@ -230,7 +231,9 @@ export const UserVoteModal: React.FC<UserVoteModalProps> = ({
                                   className="w-2.5 h-2.5 rounded-full"
                                   style={{ backgroundColor: party?.color || '#64748B' }}
                                 />
-                                <span className="font-semibold text-slate-700">{partyCode}:</span>
+                                <span className="font-semibold text-slate-700">
+                                  {getProvincePartyLabel(prov.code, partyCode)}:
+                                </span>
                                 <span className="font-extrabold text-slate-900">{uSeats}</span>
                                 {liveResults.isAvailable && (
                                   <span className="text-[10px] text-slate-400">

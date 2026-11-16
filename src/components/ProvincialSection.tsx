@@ -19,6 +19,7 @@ import {
   CONGRESS_PARTIES,
   CONGRESS_PARTY_MAP,
   DHONDT_MIN_THRESHOLD_PCT,
+  getProvincePartyLabel,
   PROVINCES,
   PROVINCE_MAP,
   TOTAL_CONGRESS_SEATS,
@@ -532,7 +533,10 @@ export const ProvincialSection: React.FC<ProvincialSectionProps> = ({
                       }}
                     />
                     <span className="text-sm font-extrabold text-slate-900">
-                      {dhondtResult.lastSeatWinner.partyCode}
+                      {getProvincePartyLabel(
+                        selectedProvince.code,
+                        dhondtResult.lastSeatWinner.partyCode
+                      )}
                     </span>
                     <span className="text-xs text-slate-600">
                       (cociente {dhondtResult.lastSeatWinner.quotient.toFixed(2)}%)
@@ -564,7 +568,10 @@ export const ProvincialSection: React.FC<ProvincialSectionProps> = ({
                       }}
                     />
                     <span className="text-sm font-extrabold text-slate-900">
-                      {dhondtResult.nextSeatContender.partyCode}
+                      {getProvincePartyLabel(
+                        selectedProvince.code,
+                        dhondtResult.nextSeatContender.partyCode
+                      )}
                     </span>
                     <span className="text-xs font-bold text-amber-800 bg-amber-100/80 px-2 py-0.5 rounded-full">
                       a +{dhondtResult.nextSeatContender.pctDiff.toFixed(2)}% de lograrlo
@@ -616,7 +623,7 @@ export const ProvincialSection: React.FC<ProvincialSectionProps> = ({
                           style={{ backgroundColor: party?.color || '#64748B' }}
                         />
                         <span className="font-bold text-sm text-slate-900">
-                          {party?.name || partyCode}
+                          {getProvincePartyLabel(selectedProvince.code, partyCode)}
                         </span>
 
                         {isLastWinner && (

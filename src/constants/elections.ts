@@ -12,6 +12,7 @@ export interface ProvinceConfig {
   region: string;
   seats: number;
   parties: string[];
+  partyLabels?: Record<string, string>;
 }
 
 // Fecha exacta de cierre de porras: Domingo 29 de noviembre de 2026 a las 09:00h (hora peninsular española)
@@ -107,24 +108,24 @@ export const CONGRESS_PARTIES: PartyConfig[] = [
   },
   {
     code: 'Compromìs',
-    name: 'Compromìs',
+    name: 'COMPROMÍS: FRONT VALENCIÀ (COMPROMIS-EUPV-PODEM-ERPV)',
     shortName: 'COMP',
     color: '#F37021',
-    aliases: ['COMPROMIS', 'COMPROMÌS', 'COMPROMÍS', 'COMP'],
+    aliases: ['COMPROMIS', 'COMPROMÌS', 'COMPROMÍS', 'COMP', 'FRONT VALENCIA', 'COMPROMIS-EUPV-PODEM-ERPV'],
   },
   {
     code: 'Coalición Canaria',
-    name: 'Coalición Canaria',
+    name: 'COALICIÓN CANARIA (CCa-1.ºCAN)',
     shortName: 'CC',
     color: '#F59E0B',
-    aliases: ['COALICION CANARIA', 'COALICIÓN CANARIA', 'CC', 'CCa'],
+    aliases: ['COALICION CANARIA', 'COALICIÓN CANARIA', 'CC', 'CCa', '1.ºCAN-CCa', 'CCa-1.ºCAN'],
   },
   {
     code: 'UPC',
-    name: 'UPC',
+    name: 'UNIDAD DEL PUEBLO CANARIO UPC (NC-BC, PODEMOS, IU, SUMAR)',
     shortName: 'UPC',
     color: '#0284C7',
-    aliases: ['UPC', 'UNION DEL PUEBLO CANARIO', 'UNIÓN DEL PUEBLO CANARIO'],
+    aliases: ['UPC', 'UNION DEL PUEBLO CANARIO', 'UNIÓN DEL PUEBLO CANARIO', 'UNIDAD DEL PUEBLO CANARIO', 'NC-BC'],
   },
   {
     code: 'SALF',
@@ -135,10 +136,10 @@ export const CONGRESS_PARTIES: PartyConfig[] = [
   },
   {
     code: 'Ara Mès',
-    name: 'Ara Mès',
+    name: 'ARAMÉS-FRONT AMPLI (ARAMÉS-EU-MS)',
     shortName: 'ARA MÈS',
     color: '#65A30D',
-    aliases: ['ARA MES', 'ARA MÈS', 'ARA MÉS', 'ARAMES', 'MÉS'],
+    aliases: ['ARA MES', 'ARA MÈS', 'ARA MÉS', 'ARAMES', 'MÉS', 'ARAMES-FRONT AMPLI', 'ARAMES-EU-MS'],
   },
 ];
 
@@ -211,65 +212,389 @@ export function getPartyColor(partyCode: string): string {
   );
 }
 
-// Partidos base presentes en todas las provincias
+// Partidos base presentes en la mayoría de provincias (salvo donde Frente Amplio concurre integrado en otra candidatura autonómica)
 const BASE_PROVINCIAL_PARTIES = ['PP', 'PSOE', 'VOX', 'Frente Amplio'];
+const BASE_WITHOUT_FA_PARTIES = ['PP', 'PSOE', 'VOX'];
 
-function buildProvincialParties(extraParties: string[] = []): string[] {
-  return [...BASE_PROVINCIAL_PARTIES, ...extraParties];
+function buildProvincialParties(extraParties: string[] = [], includeFrenteAmplio = true): string[] {
+  const base = includeFrenteAmplio ? BASE_PROVINCIAL_PARTIES : BASE_WITHOUT_FA_PARTIES;
+  return [...base, ...extraParties];
 }
 
 // 52 circunscripciones (50 provincias + Ceuta y Melilla) = 350 escaños
+// Nombres y coaliciones proclamadas en el BOE (BOE-A-2026-23103, de 3 de noviembre de 2026)
 export const PROVINCES: ProvinceConfig[] = [
-  { code: '01', name: 'Álava', region: 'País Vasco', seats: 4, parties: buildProvincialParties(['PNV', 'EH Bildu']) },
+  {
+    code: '01',
+    name: 'Álava',
+    region: 'País Vasco',
+    seats: 4,
+    parties: buildProvincialParties(['PNV', 'EH Bildu']),
+    partyLabels: {
+      PSOE: 'PARTIDO SOCIALISTA DE EUSKADI-EUSKADIKO EZKERRA (PSOE) PSE-EE (PSOE)',
+      'Frente Amplio': 'FRENTE AMPLIO-FRONTE ZABALA (FRENTE AMPLIO-FRONTE ZABALA)',
+      PNV: 'EUZKO ALDERDI JELTZALEA-PARTIDO NACIONALISTA VASCO (EAJ-PNV)',
+      'EH Bildu': 'EUSKAL HERRIA BILDU (EH BILDU)',
+    },
+  },
   { code: '02', name: 'Albacete', region: 'Castilla-La Mancha', seats: 4, parties: buildProvincialParties() },
-  { code: '03', name: 'Alicante', region: 'Comunidad Valenciana', seats: 12, parties: buildProvincialParties(['Compromìs']) },
-  { code: '04', name: 'Almería', region: 'Andalucía', seats: 6, parties: buildProvincialParties(['Adelante Andalucía']) },
+  {
+    code: '03',
+    name: 'Alicante',
+    region: 'Comunidad Valenciana',
+    seats: 12,
+    // En la C. Valenciana Compromís, Frente Amplio (EUPV), Podem y ERPV se presentan juntos
+    parties: buildProvincialParties(['Compromìs'], false),
+    partyLabels: {
+      'Compromìs': 'COMPROMÍS: FRONT VALENCIÀ (COMPROMIS-EUPV-PODEM-ERPV)',
+    },
+  },
+  {
+    code: '04',
+    name: 'Almería',
+    region: 'Andalucía',
+    seats: 6,
+    parties: buildProvincialParties(['Adelante Andalucía']),
+    partyLabels: {
+      'Adelante Andalucía': 'ADELANTE ANDALUCÍA (ADELANTE ANDALUCÍA)',
+    },
+  },
   { code: '05', name: 'Ávila', region: 'Castilla y León', seats: 3, parties: buildProvincialParties() },
   { code: '06', name: 'Badajoz', region: 'Extremadura', seats: 5, parties: buildProvincialParties() },
-  { code: '07', name: 'Baleares', region: 'Illes Balears', seats: 8, parties: buildProvincialParties(['Ara Mès']) },
-  { code: '08', name: 'Barcelona', region: 'Cataluña', seats: 32, parties: buildProvincialParties(['Junts', 'ERC']) },
+  {
+    code: '07',
+    name: 'Baleares',
+    region: 'Illes Balears',
+    seats: 8,
+    // En Illes Balears Ara Més y Frente Amplio (EU-MS) se presentan juntos
+    parties: buildProvincialParties(['Ara Mès'], false),
+    partyLabels: {
+      PSOE: 'PARTIDO SOCIALISTA DE LAS ISLAS BALEARES (PSIB-PSOE)',
+      'Ara Mès': 'ARAMÉS-FRONT AMPLI (ARAMÉS-EU-MS)',
+    },
+  },
+  {
+    code: '08',
+    name: 'Barcelona',
+    region: 'Cataluña',
+    seats: 32,
+    parties: buildProvincialParties(['Junts', 'ERC']),
+    partyLabels: {
+      PP: 'PARTIT POPULAR / PARTIDO POPULAR (PP)',
+      PSOE: 'PARTIT DELS SOCIALISTES DE CATALUNYA (PSC-PSOE) (PSC)',
+      'Frente Amplio': 'Comuns-Front Ampli (COMUNS-FRONT AMPLI)',
+      Junts: 'JUNTS PER CATALUNYA (JxCat)',
+      ERC: 'ESQUERRA REPUBLICANA DE CATALUNYA (ERC)',
+    },
+  },
   { code: '09', name: 'Burgos', region: 'Castilla y León', seats: 4, parties: buildProvincialParties() },
   { code: '10', name: 'Cáceres', region: 'Extremadura', seats: 4, parties: buildProvincialParties() },
-  { code: '11', name: 'Cádiz', region: 'Andalucía', seats: 8, parties: buildProvincialParties(['Adelante Andalucía']) },
-  { code: '12', name: 'Castellón', region: 'Comunidad Valenciana', seats: 5, parties: buildProvincialParties(['Compromìs']) },
+  {
+    code: '11',
+    name: 'Cádiz',
+    region: 'Andalucía',
+    seats: 8,
+    parties: buildProvincialParties(['Adelante Andalucía']),
+    partyLabels: {
+      'Frente Amplio': 'Frente Amplio Andaluz (FA)',
+      'Adelante Andalucía': 'ADELANTE ANDALUCÍA (ADELANTE ANDALUCÍA)',
+    },
+  },
+  {
+    code: '12',
+    name: 'Castellón',
+    region: 'Comunidad Valenciana',
+    seats: 5,
+    // En la C. Valenciana Compromís, Frente Amplio (EUPV), Podem y ERPV se presentan juntos
+    parties: buildProvincialParties(['Compromìs'], false),
+    partyLabels: {
+      'Compromìs': 'COMPROMÍS: FRONT VALENCIÀ (COMPROMIS-EUPV-PODEM-ERPV)',
+    },
+  },
   { code: '13', name: 'Ciudad Real', region: 'Castilla-La Mancha', seats: 5, parties: buildProvincialParties() },
-  { code: '14', name: 'Córdoba', region: 'Andalucía', seats: 6, parties: buildProvincialParties(['Adelante Andalucía']) },
-  { code: '15', name: 'A Coruña', region: 'Galicia', seats: 8, parties: buildProvincialParties(['BNG']) },
+  {
+    code: '14',
+    name: 'Córdoba',
+    region: 'Andalucía',
+    seats: 6,
+    parties: buildProvincialParties(['Adelante Andalucía']),
+    partyLabels: {
+      'Frente Amplio': 'FRENTE AMPLIO ANDALUZ (FA)',
+      'Adelante Andalucía': 'ADELANTE ANDALUCÍA (ADELANTE ANDALUCÍA)',
+    },
+  },
+  {
+    code: '15',
+    name: 'A Coruña',
+    region: 'Galicia',
+    seats: 8,
+    parties: buildProvincialParties(['BNG']),
+    partyLabels: {
+      PSOE: 'Partido dos Socialistas de Galicia-PSOE (PSdeG-PSOE)',
+      'Frente Amplio': 'Frente Amplio-Fronte Ampla (FRENTE AMPLIO-FRONTE AMPLA)',
+      BNG: 'BLOQUE NACIONALISTA GALEGO (B.N.G.)',
+    },
+  },
   { code: '16', name: 'Cuenca', region: 'Castilla-La Mancha', seats: 3, parties: buildProvincialParties() },
-  { code: '17', name: 'Girona', region: 'Cataluña', seats: 6, parties: buildProvincialParties(['Junts', 'ERC']) },
-  { code: '18', name: 'Granada', region: 'Andalucía', seats: 7, parties: buildProvincialParties(['Adelante Andalucía']) },
+  {
+    code: '17',
+    name: 'Girona',
+    region: 'Cataluña',
+    seats: 6,
+    parties: buildProvincialParties(['Junts', 'ERC']),
+    partyLabels: {
+      PP: 'PARTIT POPULAR / PARTIDO POPULAR (PP)',
+      PSOE: 'PARTIT DELS SOCIALISTES DE CATALUNYA (PSC-PSOE) (PSC)',
+      'Frente Amplio': 'Comuns-Front Ampli (COMUNS-FRONT AMPLI)',
+      Junts: 'JUNTS PER CATALUNYA (JxCat)',
+      ERC: 'ESQUERRA REPUBLICANA DE CATALUNYA (ERC)',
+    },
+  },
+  {
+    code: '18',
+    name: 'Granada',
+    region: 'Andalucía',
+    seats: 7,
+    parties: buildProvincialParties(['Adelante Andalucía']),
+    partyLabels: {
+      'Frente Amplio': 'Frente Amplio Andaluz (FA)',
+      'Adelante Andalucía': 'ADELANTE ANDALUCÍA (ADELANTE ANDALUCÍA)',
+    },
+  },
   { code: '19', name: 'Guadalajara', region: 'Castilla-La Mancha', seats: 3, parties: buildProvincialParties() },
-  { code: '20', name: 'Gipuzkoa', region: 'País Vasco', seats: 6, parties: buildProvincialParties(['PNV', 'EH Bildu']) },
-  { code: '21', name: 'Huelva', region: 'Andalucía', seats: 5, parties: buildProvincialParties(['Adelante Andalucía']) },
-  { code: '22', name: 'Huesca', region: 'Aragón', seats: 3, parties: buildProvincialParties() },
-  { code: '23', name: 'Jaén', region: 'Andalucía', seats: 5, parties: buildProvincialParties(['Adelante Andalucía']) },
+  {
+    code: '20',
+    name: 'Gipuzkoa',
+    region: 'País Vasco',
+    seats: 6,
+    parties: buildProvincialParties(['PNV', 'EH Bildu']),
+    partyLabels: {
+      PSOE: 'PARTIDO SOCIALISTA DE EUSKADI-EUSKADIKO EZKERRA (PSOE) PSE-EE (PSOE)',
+      PNV: 'EUZKO ALDERDI JELTZALEA-PARTIDO NACIONALISTA VASCO (EAJ-PNV)',
+      'EH Bildu': 'EUSKAL HERRIA BILDU (EH BILDU)',
+    },
+  },
+  {
+    code: '21',
+    name: 'Huelva',
+    region: 'Andalucía',
+    seats: 5,
+    parties: buildProvincialParties(['Adelante Andalucía']),
+    partyLabels: {
+      PSOE: 'PARTIDO SOCIALISTA DE HUELVA (PSOE)',
+      'Frente Amplio': 'Frente Amplio Andaluz (FA)',
+      'Adelante Andalucía': 'ADELANTE ANDALUCÍA (ADELANTE ANDALUCÍA)',
+    },
+  },
+  {
+    code: '22',
+    name: 'Huesca',
+    region: 'Aragón',
+    seats: 3,
+    parties: buildProvincialParties(),
+    partyLabels: {
+      'Frente Amplio': 'CHUNTA ARAGONESISTA-FRENTE AMPLIO ARAGÓN (CHA-IU-MS-FRENTE AMPLIO)',
+    },
+  },
+  {
+    code: '23',
+    name: 'Jaén',
+    region: 'Andalucía',
+    seats: 5,
+    parties: buildProvincialParties(['Adelante Andalucía']),
+    partyLabels: {
+      'Adelante Andalucía': 'ADELANTE ANDALUCÍA (ADELANTE ANDALUCÍA)',
+    },
+  },
   { code: '24', name: 'León', region: 'Castilla y León', seats: 4, parties: buildProvincialParties() },
-  { code: '25', name: 'Lleida', region: 'Cataluña', seats: 4, parties: buildProvincialParties(['Junts', 'ERC']) },
+  {
+    code: '25',
+    name: 'Lleida',
+    region: 'Cataluña',
+    seats: 4,
+    parties: buildProvincialParties(['Junts', 'ERC']),
+    partyLabels: {
+      PSOE: 'PARTIT DELS SOCIALISTES DE CATALUNYA (PSC-PSOE) (PSC)',
+      'Frente Amplio': 'Comuns-Front Ampli (COMUNS-FRONT AMPLI)',
+      Junts: 'JUNTS PER CATALUNYA (JxCat)',
+      ERC: 'ESQUERRA REPUBLICANA DE CATALUNYA (ERC)',
+    },
+  },
   { code: '26', name: 'La Rioja', region: 'La Rioja', seats: 4, parties: buildProvincialParties() },
-  { code: '27', name: 'Lugo', region: 'Galicia', seats: 4, parties: buildProvincialParties(['BNG']) },
-  { code: '28', name: 'Madrid', region: 'Comunidad de Madrid', seats: 38, parties: buildProvincialParties(['Podemos', 'SALF']) },
-  { code: '29', name: 'Málaga', region: 'Andalucía', seats: 11, parties: buildProvincialParties(['Adelante Andalucía']) },
+  {
+    code: '27',
+    name: 'Lugo',
+    region: 'Galicia',
+    seats: 4,
+    parties: buildProvincialParties(['BNG']),
+    partyLabels: {
+      PSOE: 'PARTIDO DOS SOCIALISTAS DE GALICIA-PSOE (PSdeG-PSOE)',
+      'Frente Amplio': 'FRENTE AMPLIO-FRONTE AMPLA (FRENTE AMPLIO-FRONTE AMPLA)',
+      BNG: 'BLOQUE NACIONALISTA GALEGO (BNG)',
+    },
+  },
+  {
+    code: '28',
+    name: 'Madrid',
+    region: 'Comunidad de Madrid',
+    seats: 38,
+    parties: buildProvincialParties(['Podemos', 'SALF']),
+    partyLabels: {
+      PODEMOS: 'PODEMOS (PODEMOS)',
+      Podemos: 'PODEMOS (PODEMOS)',
+      SALF: 'SE ACABÓ LA FIESTA (SALF)',
+    },
+  },
+  {
+    code: '29',
+    name: 'Málaga',
+    region: 'Andalucía',
+    seats: 11,
+    parties: buildProvincialParties(['Adelante Andalucía']),
+    partyLabels: {
+      'Adelante Andalucía': 'ADELANTE ANDALUCÍA (ADELANTE ANDALUCÍA)',
+    },
+  },
   { code: '30', name: 'Murcia', region: 'Región de Murcia', seats: 10, parties: buildProvincialParties() },
-  { code: '31', name: 'Navarra', region: 'Navarra', seats: 5, parties: buildProvincialParties(['EH Bildu']) },
-  { code: '32', name: 'Ourense', region: 'Galicia', seats: 4, parties: buildProvincialParties(['BNG']) },
-  { code: '33', name: 'Asturias', region: 'Principado de Asturias', seats: 7, parties: buildProvincialParties() },
+  {
+    code: '31',
+    name: 'Navarra',
+    region: 'Navarra',
+    seats: 5,
+    // En Navarra UPN y PP concurren juntos (UPN-PP) y EH Bildu concurre en coalición con ERC (EH BILDU-ERC)
+    parties: buildProvincialParties(['EH Bildu']),
+    partyLabels: {
+      PP: 'UNIÓN DEL PUEBLO NAVARRO EN COALICIÓN CON EL PARTIDO POPULAR (UPN-PP)',
+      PSOE: 'PARTIDO SOCIALISTA DE NAVARRA-PSOE (PSN-PSOE)',
+      'Frente Amplio': 'Frente Amplio-Fronte Zabala (FRENTE AMPLIO-FRONTE ZABALA)',
+      'EH Bildu': 'EUSKAL HERRIA BILDU-ESQUERRA REPUBLICANA DE CATALUNYA (EH BILDU-ERC)',
+    },
+  },
+  {
+    code: '32',
+    name: 'Ourense',
+    region: 'Galicia',
+    seats: 4,
+    parties: buildProvincialParties(['BNG']),
+    partyLabels: {
+      PSOE: 'Partido dos Socialistas de Galicia-PSOE (PSdeG-PSOE)',
+      'Frente Amplio': 'Frente Amplio-Fronte Ampla (FRENTE AMPLIO-FRONTE AMPLA)',
+      BNG: 'BLOQUE NACIONALISTA GALEGO (BNG)',
+    },
+  },
+  {
+    code: '33',
+    name: 'Asturias',
+    region: 'Principado de Asturias',
+    seats: 7,
+    parties: buildProvincialParties(),
+    partyLabels: {
+      'Frente Amplio': 'FRENTE AMPLIU POR ASTURIES (FA)',
+    },
+  },
   { code: '34', name: 'Palencia', region: 'Castilla y León', seats: 3, parties: buildProvincialParties() },
-  { code: '35', name: 'Las Palmas', region: 'Canarias', seats: 8, parties: buildProvincialParties(['Coalición Canaria', 'UPC']) },
-  { code: '36', name: 'Pontevedra', region: 'Galicia', seats: 7, parties: buildProvincialParties(['BNG']) },
+  {
+    code: '35',
+    name: 'Las Palmas',
+    region: 'Canarias',
+    seats: 8,
+    // En Canarias UPC agrupa a NC-BC, Podemos, IU y Sumar (Frente Amplio) en una única candidatura
+    parties: buildProvincialParties(['Coalición Canaria', 'UPC'], false),
+    partyLabels: {
+      'Coalición Canaria': 'MUNICIPALISTAS PRIMERO CANARIAS-COALICIÓN CANARIA (1.ºCAN-CCa)',
+      UPC: 'UNIDAD DEL PUEBLO CANARIO UPC (NC-BC, PODEMOS, IU, SUMAR)',
+    },
+  },
+  {
+    code: '36',
+    name: 'Pontevedra',
+    region: 'Galicia',
+    seats: 7,
+    parties: buildProvincialParties(['BNG']),
+    partyLabels: {
+      PSOE: 'Partido dos Socialistas de Galicia-PSOE (PSdeG-PSOE)',
+      'Frente Amplio': 'Frente Amplio - Fronte Ampla (FRENTE AMPLIO - FRONTE AMPLA)',
+      BNG: 'BLOQUE NACIONALISTA GALEGO (BNG)',
+    },
+  },
   { code: '37', name: 'Salamanca', region: 'Castilla y León', seats: 4, parties: buildProvincialParties() },
-  { code: '38', name: 'Santa Cruz de Tenerife', region: 'Canarias', seats: 7, parties: buildProvincialParties(['Coalición Canaria', 'UPC']) },
+  {
+    code: '38',
+    name: 'Santa Cruz de Tenerife',
+    region: 'Canarias',
+    seats: 7,
+    // En Canarias UPC agrupa a NC-BC, Podemos, IU y Sumar (Frente Amplio) en una única candidatura
+    parties: buildProvincialParties(['Coalición Canaria', 'UPC'], false),
+    partyLabels: {
+      'Coalición Canaria': 'Coalición Canaria-Municipalistas Primero Canarias (CCa-1.ºCAN)',
+      UPC: 'UNIDAD DEL PUEBLO CANARIO UPC (NC-BC, PODEMOS, IU, SUMAR)',
+    },
+  },
   { code: '39', name: 'Cantabria', region: 'Cantabria', seats: 5, parties: buildProvincialParties() },
   { code: '40', name: 'Segovia', region: 'Castilla y León', seats: 3, parties: buildProvincialParties() },
-  { code: '41', name: 'Sevilla', region: 'Andalucía', seats: 12, parties: buildProvincialParties(['Adelante Andalucía']) },
+  {
+    code: '41',
+    name: 'Sevilla',
+    region: 'Andalucía',
+    seats: 12,
+    parties: buildProvincialParties(['Adelante Andalucía']),
+    partyLabels: {
+      'Frente Amplio': 'Frente Amplio Andaluz (FA)',
+      'Adelante Andalucía': 'ADELANTE ANDALUCÍA (ADELANTE ANDALUCÍA)',
+    },
+  },
   { code: '42', name: 'Soria', region: 'Castilla y León', seats: 2, parties: buildProvincialParties() },
-  { code: '43', name: 'Tarragona', region: 'Cataluña', seats: 6, parties: buildProvincialParties(['Junts', 'ERC']) },
+  {
+    code: '43',
+    name: 'Tarragona',
+    region: 'Cataluña',
+    seats: 6,
+    parties: buildProvincialParties(['Junts', 'ERC']),
+    partyLabels: {
+      PP: 'PARTIT POPULAR / PARTIDO POPULAR (PP)',
+      PSOE: 'PARTIT DELS SOCIALISTES DE CATALUNYA (PSC-PSOE) (PSC)',
+      'Frente Amplio': 'Comuns-Front Ampli (COMUNS-FRONT AMPLI)',
+      Junts: 'JUNTS PER CATALUNYA (JxCat)',
+      ERC: 'ESQUERRA REPUBLICANA DE CATALUNYA (ERC)',
+    },
+  },
   { code: '44', name: 'Teruel', region: 'Aragón', seats: 3, parties: buildProvincialParties() },
   { code: '45', name: 'Toledo', region: 'Castilla-La Mancha', seats: 6, parties: buildProvincialParties() },
-  { code: '46', name: 'Valencia', region: 'Comunidad Valenciana', seats: 16, parties: buildProvincialParties(['Compromìs']) },
+  {
+    code: '46',
+    name: 'Valencia',
+    region: 'Comunidad Valenciana',
+    seats: 16,
+    // En la C. Valenciana Compromís, Frente Amplio (EUPV), Podem y ERPV se presentan juntos
+    parties: buildProvincialParties(['Compromìs'], false),
+    partyLabels: {
+      'Compromìs': 'COMPROMÍS: FRONT VALENCIÀ (COMPROMIS-EUPV-PODEM-ERPV)',
+    },
+  },
   { code: '47', name: 'Valladolid', region: 'Castilla y León', seats: 5, parties: buildProvincialParties() },
-  { code: '48', name: 'Bizkaia', region: 'País Vasco', seats: 8, parties: buildProvincialParties(['PNV', 'EH Bildu']) },
+  {
+    code: '48',
+    name: 'Bizkaia',
+    region: 'País Vasco',
+    seats: 8,
+    parties: buildProvincialParties(['PNV', 'EH Bildu']),
+    partyLabels: {
+      PSOE: 'PARTIDO SOCIALISTA DE EUSKADI-EUSKADIKO EZKERRA (PSOE) PSE-EE (PSOE)',
+      PNV: 'EUZKO ALDERDI JELTZALEA-PARTIDO NACIONALISTA VASCO (EAJ-PNV)',
+      'EH Bildu': 'EUSKAL HERRIA BILDU (EH Bildu)',
+    },
+  },
   { code: '49', name: 'Zamora', region: 'Castilla y León', seats: 3, parties: buildProvincialParties() },
-  { code: '50', name: 'Zaragoza', region: 'Aragón', seats: 7, parties: buildProvincialParties() },
+  {
+    code: '50',
+    name: 'Zaragoza',
+    region: 'Aragón',
+    seats: 7,
+    parties: buildProvincialParties(),
+    partyLabels: {
+      'Frente Amplio': 'Chunta Aragonesista-Frente Amplio Aragón (CHA-IU-MS-FRENTE AMPLIO)',
+    },
+  },
   { code: '51', name: 'Ceuta', region: 'Ceuta', seats: 1, parties: buildProvincialParties() },
   { code: '52', name: 'Melilla', region: 'Melilla', seats: 1, parties: buildProvincialParties() },
 ];
@@ -277,6 +602,14 @@ export const PROVINCES: ProvinceConfig[] = [
 export const PROVINCE_MAP: Record<string, ProvinceConfig> = Object.fromEntries(
   PROVINCES.map((prov) => [prov.code, prov])
 );
+
+export function getProvincePartyLabel(provinceCode: string, partyCode: string): string {
+  const prov = PROVINCE_MAP[provinceCode];
+  if (prov?.partyLabels?.[partyCode]) {
+    return prov.partyLabels[partyCode];
+  }
+  return CONGRESS_PARTY_MAP[partyCode]?.name || partyCode;
+}
 
 export function getProvincePartyConfigs(provinceCode: string): PartyConfig[] {
   const prov = PROVINCE_MAP[provinceCode];

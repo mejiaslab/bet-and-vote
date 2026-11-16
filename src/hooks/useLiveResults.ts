@@ -7,10 +7,11 @@ import {
 import { calculateDHondt } from '../utils/dhondt';
 import { LiveResultsData } from '../utils/rankings';
 
-export const LIVE_RESULTS_URL = 'https://datos.generales29n.com';
-export const CONGRESO_BASE_URL = `${LIVE_RESULTS_URL}/v1/congreso-2026-11`;
-export const SENADO_BASE_URL = `${LIVE_RESULTS_URL}/v1/senado-2026-11`;
-export const HIST_2023_CONGRESO_URL = `${LIVE_RESULTS_URL}/v1/hist/congreso-2023-07`;
+export const LIVE_RESULTS_URL = 'https://generales29n.com/datos';
+export const LIVE_RESULTS_API_URL = 'https://datos.generales29n.com';
+export const CONGRESO_BASE_URL = `${LIVE_RESULTS_API_URL}/v1/congreso-2026-11`;
+export const SENADO_BASE_URL = `${LIVE_RESULTS_API_URL}/v1/senado-2026-11`;
+export const HIST_2023_CONGRESO_URL = `${LIVE_RESULTS_API_URL}/v1/hist/congreso-2023-07`;
 
 const POLL_INTERVAL_MS = 30000;
 
@@ -511,7 +512,7 @@ export function useLiveResults(): UseLiveResultsReturn {
     );
 
     const nextResults = createEmptyLiveResults(
-      `Ministerio del Interior · datos.generales29n.com (seq #${manifest.seq})`
+      `Ministerio del Interior · generales29n.com/datos (seq #${manifest.seq})`
     );
     nextResults.scrutinyPct = Number(manifest.counted_pct) || 0;
     nextResults.updatedAt = manifest.generated_at || new Date().toISOString();
