@@ -20,6 +20,7 @@ import {
   CONGRESS_PARTY_MAP,
   DHONDT_MIN_THRESHOLD_PCT,
   getProvincePartyLabel,
+  getProvincePartyPrev2023,
   PROVINCES,
   PROVINCE_MAP,
   TOTAL_CONGRESS_SEATS,
@@ -597,6 +598,7 @@ export const ProvincialSection: React.FC<ProvincialSectionProps> = ({
             <div className="space-y-2.5">
               {selectedProvince.parties.map((partyCode) => {
                 const party = CONGRESS_PARTY_MAP[partyCode];
+                const prev2023 = getProvincePartyPrev2023(selectedProvince.code, partyCode);
                 const pct = currentProvincePcts[partyCode] ?? 0;
                 const seatsWon = dhondtResult.seatsByParty[partyCode] ?? 0;
                 const isLastWinner =
@@ -617,7 +619,7 @@ export const ProvincialSection: React.FC<ProvincialSectionProps> = ({
                     }`}
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-                      <div className="flex items-center gap-2.5">
+                      <div className="flex items-center gap-2 flex-wrap">
                         <span
                           className="w-3.5 h-3.5 rounded-full shrink-0 shadow-2xs"
                           style={{ backgroundColor: party?.color || '#64748B' }}
@@ -625,6 +627,20 @@ export const ProvincialSection: React.FC<ProvincialSectionProps> = ({
                         <span className="font-bold text-sm text-slate-900">
                           {getProvincePartyLabel(selectedProvince.code, partyCode)}
                         </span>
+
+                        {prev2023 && (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-slate-200/75 text-slate-700 border border-slate-300/70">
+                            23J
+                            {prev2023.note && !prev2023.note.includes('+')
+                              ? ` (${prev2023.note})`
+                              : ''}
+                            : {prev2023.pct?.toFixed(2).replace('.', ',')}% · {prev2023.seats}{' '}
+                            {prev2023.seats === 1 ? 'esc.' : 'esc.'}
+                            {prev2023.note && prev2023.note.includes('+')
+                              ? ` [${prev2023.note}]`
+                              : ''}
+                          </span>
+                        )}
 
                         {isLastWinner && (
                           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-blue-600 text-white">

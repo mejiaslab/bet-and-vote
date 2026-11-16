@@ -249,7 +249,7 @@ export const NationalPctSection: React.FC<NationalPctSectionProps> = ({
                 className="p-3.5 rounded-2xl bg-slate-50/70 border border-slate-200/80 hover:border-slate-300 transition-all space-y-2.5"
               >
                 <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="flex items-center gap-2 min-w-0 flex-wrap">
                     <span
                       className="w-3.5 h-3.5 rounded-full shrink-0"
                       style={{ backgroundColor: party.color }}
@@ -257,6 +257,13 @@ export const NationalPctSection: React.FC<NationalPctSectionProps> = ({
                     <span className="font-bold text-sm text-slate-900 truncate">
                       {party.name}
                     </span>
+                    {party.prev2023 && typeof party.prev2023.pct === 'number' && (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-slate-200/75 text-slate-700 border border-slate-300/70">
+                        23J{party.prev2023.note ? ` (${party.prev2023.note})` : ''}:{' '}
+                        {party.prev2023.pct.toFixed(2).replace('.', ',')}% ({party.prev2023.seats}{' '}
+                        esc.)
+                      </span>
+                    )}
                   </div>
 
                   <div className="relative w-24 shrink-0">
